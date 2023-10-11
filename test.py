@@ -1,9 +1,9 @@
 from utilities import load_file, preprocess_transactions, post_process_mined_rules
-#from main import mine_frequent_patterns
-from fp_growth_2 import mine_frequent_patterns
+#from fp_growth_2 import mine_frequent_patterns
+from apriori import mine_frequent_patterns
 from mine_asso_rules import mine_association_rules
 import datetime
-import pickle
+#import pickle
 
 if (__name__ == "__main__"):
 
