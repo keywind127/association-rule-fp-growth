@@ -29,11 +29,17 @@ if (__name__ == "__main__"):
 
     print("MIN SUP INT:", min_sup_int)
 
-    min_conf_float = 0.30
+    min_conf_float = 0.07
 
     frequent_patterns, occurrences = mine_frequent_patterns(transactions, min_sup_int)
 
-    print(frequent_patterns["14"][()], frequent_patterns["18"][()], frequent_patterns["18"].get(("14", ), -1))
+    print(
+        frequent_patterns[frozenset([ "14" ])], 
+        frequent_patterns[frozenset([ "18" ])],
+        frequent_patterns[frozenset([ "14", "18" ])]
+    )
+
+    # print(frequent_patterns["14"][()], frequent_patterns["18"][()], frequent_patterns["18"].get(("14", ), -1))
 
     #with open("d.txt", "w", encoding = "utf-8") as wf:
 
@@ -45,20 +51,20 @@ if (__name__ == "__main__"):
 
     #    pickle.dump(frequent_patterns, wf, protocol = pickle.HIGHEST_PROTOCOL)
 
-    # association_rules = mine_association_rules(frequent_patterns, min_conf_float)
+    association_rules = mine_association_rules(frequent_patterns, min_conf_float, max_transactions)
 
-    # post_processed = post_process_mined_rules(occurrences, association_rules, min_conf_float, max_transactions)
+    post_processed = post_process_mined_rules(occurrences, association_rules, min_conf_float, max_transactions)
 
-    # print(len(association_rules))
+    print(len(association_rules))
 
     print(f"Elapsed Time: {(datetime.datetime.now() - SOT).total_seconds()}")
 
-    # with open("c.txt", "w") as wf:
+    with open("c.txt", "w") as wf:
 
-    #     for row in post_processed:
+        for row in post_processed:
 
-    #         for item in row:
+            for item in row:
 
-    #             wf.write(f"{item} ")
+                wf.write(f"{item} ")
 
-    #         wf.write("\n")
+            wf.write("\n")

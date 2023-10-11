@@ -302,7 +302,9 @@ def __mine_patterns(frequent_patterns : List[ List[ Union[ int, str ] ] ],
 
 
 
-def format_frequent_patterns(frequent_patterns : List[ List[ Union[ int, str ] ] ]) -> Dict[ str, Dict[ Tuple[ str ], int ] ]:
+def format_frequent_patterns(frequent_patterns : List[ List[ Union[ int, str ] ] ]
+            #) -> Dict[ str, Dict[ Tuple[ str ], int ] ]:
+            ) -> Dict[ FrozenSet[ str ], int ]:
 
     # initialization of empty dictionary to store formatted frequent itemsets with occurrences
     frequent_patterns_dict = dict()
@@ -323,10 +325,12 @@ def format_frequent_patterns(frequent_patterns : List[ List[ Union[ int, str ] ]
             Add frequent itemset to collection
         """
 
-        if (tail_item in frequent_patterns_dict):
-            frequent_patterns_dict[tail_item][pattern] = path_count
-        else:
-            frequent_patterns_dict[tail_item] = {  pattern : path_count  }
+        # if (tail_item in frequent_patterns_dict):
+        #     frequent_patterns_dict[tail_item][pattern] = path_count
+        # else:
+        #     frequent_patterns_dict[tail_item] = {  pattern : path_count  }
+
+        frequent_patterns_dict[frozenset([ *pattern, tail_item ])] = path_count
 
     # return formatted patterns
     return frequent_patterns_dict

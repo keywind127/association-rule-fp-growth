@@ -36,11 +36,11 @@ def post_process_mined_rules(occurrences : Dict[ str, int ],
 
         conseqeunt = sorted(association_rule[1], key = occurrences.__getitem__, reverse = True)
 
-        confidence = association_rule[2]
+        confidence = association_rule[3]
 
-        support_rt = association_rule[3] / num_transactions
+        support_rt = association_rule[2] #/ num_transactions
 
-        confi_lift = confidence / min_conf_float
+        confi_lift = association_rule[4] #confidence / min_conf_float
 
         post_processed_rules.append((
             antecedent, 

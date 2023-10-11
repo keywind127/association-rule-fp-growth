@@ -13,9 +13,9 @@ if (__name__ == "__main__"):
 
     num_transactions = len(transactions)
 
-    union_set = { "18", "14" }
+    union_set = { "3", "28" }
 
-    union_ant = { "14" }
+    union_ant = { "28" }
 
     sup_union = 0
 
