@@ -1,15 +1,24 @@
 from typing import *
 
 def argmin(iterable : Iterable, key_funct : Optional[ Callable ] = lambda x : x[1]) -> Tuple[ int, Any ]:
+    
+    """This function take an iterable and returns the minimum element and its index."""
     return min(enumerate(iterable), key = key_funct)
 
 
 def set_intersection(*sets_list) -> Set[ Any ]:
+
+    """This function finds the intersection between a list of sets."""
+
+    # index of minimum set
     min_idx : int = argmin(sets_list, lambda x : len(x[1]))[0]
+
+    # the intersection of these sets
     return set.intersection(sets_list[min_idx], *sets_list[None : min_idx], *sets_list[min_idx + 1 : None])
 
 
-def count_item_occurrences(transactions : List[ List[ Union[ int, str ] ] ]) -> Dict[ str, List[ Union[ int, Set[ int ] ] ] ]:
+def count_item_occurrences(transactions : List[ List[ Union[ int, str ] ] ]
+            ) -> Dict[ str, List[ Union[ int, Set[ int ] ] ] ]:
 
     """Given a list of transactions, count the number of occurrences of each distinct item."""
 
@@ -31,18 +40,21 @@ def count_item_occurrences(transactions : List[ List[ Union[ int, str ] ] ]) -> 
             # ignore first element since it is not an item
             transaction = transaction[1:]
 
-        # iterate through each item and increment its occurrence count
+        # iterate through each item
         for item in transaction:
-            #occurrences[item] = occurrences.get(item, 0) + occur_incr_unit
 
+            # item already in dictionary
             if (item in occurrences):
 
+                # increment item occurrences count
                 occurrences[item][0] += occur_incr_unit
 
+                # add tid to transaction collection
                 occurrences[item][1].add(tid)
 
             else:
 
+                # initialize item in dictionary with [  OCCURRENCES, TID_SET  ]
                 occurrences[item] = [  
                     occur_incr_unit, set([ tid ])  
                 ]
@@ -64,24 +76,11 @@ def count_itemset_support(transactions : List[ Set[ str ] ],
         # number of transactions
         return len(transactions)
 
-    # # initialize support count as zero
-    # support_count = 0
-
-    # # iterate through each transaction
-    # for transaction in transactions:
-
-    #     # increment support count if itemset is subset of transaction
-    #     support_count += itemset.issubset(transaction)
-
-    # support_count = sum(itemset.issubset(transaction) for transaction in transactions)
-
-    # return support_count
-
-    locations = [
-        occurrences[item][1] for item in itemset
-    ]
-
-    return len(set_intersection(*locations))
+    # number of transactions that are supersets of itemset
+    return len(set_intersection(*[  
+        occurrences[item][1] 
+            for item in itemset  
+    ]))
 
 
 
@@ -187,7 +186,6 @@ def find_frequent_patterns(transactions : List[ List[ str ] ],
     accumulation = []
 
     # obtain candidate items to be accumulated (sorted in alphabetical order A->Z)
-    #remaining = sorted(occurrences.keys())
     remaining = list(map(lambda x : x[0], sorted(occurrences.items(), key = lambda x : x[1][0])))
 
     # recursively mine frequent patterns using DFS Apriori Algorithm
@@ -227,10 +225,12 @@ def mine_frequent_patterns(transactions : List[ List[ str ] ],
         min_sup_int
     )
 
+    # remove transaction collection from occurrences dictionary
     format_occurrences(occurrences)
 
     # frequent patterns (dict) and occurrences of each distinct item (dict)
     return (frequent_patterns, occurrences)
+
 
 
 if (__name__ == "__main__"):
