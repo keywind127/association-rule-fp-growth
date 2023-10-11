@@ -42,10 +42,10 @@ def extract_frequent_itemsets(
 
 
 
-def _mine_association_rules(association_rules              : Set[ Tuple[ FrozenSet, FrozenSet, float, int ] ], 
+def _mine_association_rules(association_rules              : Set[ Tuple[ FrozenSet[ str ], FrozenSet[ str ], float, int ] ], 
                             frequent_itemsets_with_support : Dict[ FrozenSet[ str ], int ], #Dict[ Any, Dict[ Tuple[ Any ], int ] ],
-                            antecedent                     : Dict[ Any, int ], 
-                            consequent                     : Dict[ Any, int ], 
+                            antecedent                     : Set[ str ], #Dict[ Any, int ], 
+                            consequent                     : Set[ str ], #Dict[ Any, int ], 
                             min_conf_float                 : float, 
                             union_length                   : int, 
                             union_support                  : int,
@@ -58,17 +58,17 @@ def _mine_association_rules(association_rules              : Set[ Tuple[ FrozenS
 
 
         # antecedent itemset as (index, item) dictionary
-        _antecedent : dict = swap_dictionary_key_value(antecedent)
+        #_antecedent : dict = swap_dictionary_key_value(antecedent)
 
         # antecedent itemset as tuple
-        _antecedent : tuple = tuple(
-            _antecedent[idx] for idx in range(union_length) 
-                if (idx in _antecedent)
-        )
+        # _antecedent : tuple = tuple(
+        #     _antecedent[idx] for idx in range(union_length) 
+        #         if (idx in _antecedent)
+        # )
 
         # antecedent itemset support count
         antecedent_support : int = get_frequent_itemset_support(
-            frequent_itemsets_with_support, _antecedent
+            frequent_itemsets_with_support, antecedent #_antecedent
         )
 
 
@@ -82,17 +82,17 @@ def _mine_association_rules(association_rules              : Set[ Tuple[ FrozenS
         
         
         # consequent itemset as (index, item) dictionary
-        _consequent : dict = swap_dictionary_key_value(consequent)
+        #_consequent : dict = swap_dictionary_key_value(consequent)
 
         # consequent itemset as tuple
-        _consequent : tuple = tuple(
-            _consequent[idx] for idx in range(union_length)
-                if (idx in _consequent)
-        )
+        # _consequent : tuple = tuple(
+        #     _consequent[idx] for idx in range(union_length)
+        #         if (idx in _consequent)
+        # )
 
         # consequent itemset support count
         consequent_support : int = get_frequent_itemset_support(
-            frequent_itemsets_with_support, _consequent
+            frequent_itemsets_with_support, consequent #_consequent
         )
 
         # conseqeunt support count to consequent support ratio
@@ -117,11 +117,14 @@ def _mine_association_rules(association_rules              : Set[ Tuple[ FrozenS
         ))
 
 
-    for item, index in list(antecedent.items()):
+    #for item, index in list(antecedent.items()):
+    for item in antecedent.copy():
 
         # move item from antecedent to consequent
-        consequent[item] = index
-        del antecedent[item]
+        #consequent[item] = index
+        consequent.add(item)
+        #del antecedent[item]
+        antecedent.remove(item)
 
         # recursively mine association rules of frequent itemset
         _mine_association_rules(
@@ -136,8 +139,10 @@ def _mine_association_rules(association_rules              : Set[ Tuple[ FrozenS
         )
 
         # move item from consequent back to antecedent
-        antecedent[item] = index
-        del consequent[item]
+        #antecedent[item] = index
+        antecedent.add(item)
+        #del consequent[item]
+        consequent.remove(item)
 
 
 
@@ -159,10 +164,12 @@ def mine_association_rules(
     for frequent_itemset in frequent_itemsets:
 
         # (item, index) dictionary {  Dict[ Any, int ]  }
-        antecedent : dict = itemset_tuple_to_dict(frequent_itemset)
+        #antecedent : dict = itemset_tuple_to_dict(frequent_itemset)
+        antecedent : set = set(frequent_itemset)
 
         # (item, index) dictionary {  Dict[ Any, int ]  }
-        consequent : dict = dict()
+        #consequent : dict = dict()
+        consequent : set = set()
 
         # support count of frequent itemset (union of antecedent and consequent)
         union_support : int = get_frequent_itemset_support(frequent_itemsets_with_support, frequent_itemset)
