@@ -1,6 +1,8 @@
 from utilities import load_file, preprocess_transactions, post_process_mined_rules
 #from fp_growth_2 import mine_frequent_patterns
-from apriori import mine_frequent_patterns
+#from apriori import mine_frequent_patterns
+#from apriori_2 import mine_frequent_patterns
+from apriori_3 import mine_frequent_patterns
 from mine_asso_rules import mine_association_rules
 import datetime
 #import pickle
@@ -9,7 +11,7 @@ if (__name__ == "__main__"):
 
     SOT = datetime.datetime.now()
 
-    max_transactions = 10000
+    max_transactions = 3000
 
     filename = "test_data/ibm-2023-released.txt"
 
@@ -29,15 +31,15 @@ if (__name__ == "__main__"):
 
     print("MIN SUP INT:", min_sup_int)
 
-    min_conf_float = 0.07
+    min_conf_float = 0.05
 
     frequent_patterns, occurrences = mine_frequent_patterns(transactions, min_sup_int)
 
-    print(
-        frequent_patterns[frozenset([ "14" ])], 
-        frequent_patterns[frozenset([ "18" ])],
-        frequent_patterns[frozenset([ "14", "18" ])]
-    )
+    # print(
+    #     frequent_patterns[frozenset([ "14" ])], 
+    #     frequent_patterns[frozenset([ "18" ])],
+    #     frequent_patterns[frozenset([ "14", "18" ])]
+    # )
 
     # print(frequent_patterns["14"][()], frequent_patterns["18"][()], frequent_patterns["18"].get(("14", ), -1))
 
